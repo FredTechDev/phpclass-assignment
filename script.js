@@ -4,9 +4,8 @@
  * Validate a single mark field.
  * Returns an error message string, or an empty string when valid.
  */
-function validateMark(fieldName, label) {
+function validateMark(fieldName, label, maximumMark) {
     const field = document.getElementById(fieldName);
-    const errorElement = document.getElementById(fieldName + "-error");
     const value = field.value.trim();
 
     // Check that the field has been filled.
@@ -19,10 +18,10 @@ function validateMark(fieldName, label) {
         return label + " must be a number.";
     }
 
-    // Check that the value is between 0 and 100.
+    // Check that the value is within the allowed range for this assessment.
     const mark = Number(value);
-    if (mark < 0 || mark > 100) {
-        return label + " must be between 0 and 100.";
+    if (mark < 0 || mark > maximumMark) {
+        return label + " must be between 0 and " + maximumMark + ".";
     }
 
     return "";
@@ -34,15 +33,15 @@ function validateMark(fieldName, label) {
  */
 function validateForm(event) {
     const fields = [
-        { id: "cat1", label: "CAT 1" },
-        { id: "cat2", label: "CAT 2" },
-        { id: "exam", label: "Final Examination" }
+        { id: "cat1", label: "CAT 1", maximumMark: 20 },
+        { id: "cat2", label: "CAT 2", maximumMark: 20 },
+        { id: "exam", label: "Final Examination", maximumMark: 60 }
     ];
 
     let formIsValid = true;
 
     fields.forEach(function (field) {
-        const message = validateMark(field.id, field.label);
+        const message = validateMark(field.id, field.label, field.maximumMark);
         document.getElementById(field.id + "-error").textContent = message;
 
         if (message !== "") {
